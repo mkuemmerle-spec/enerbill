@@ -2114,8 +2114,8 @@ footer {
   var radios = form.querySelectorAll('input[name="anliegen"]');
 
   // ===== KONFIGURATION: Endpoint fuer Lead-Uebermittlung =====
-  // Make-Webhook hier eintragen. Leer = Demo-Modus (zeigt Erfolgsmeldung ohne Versand).
-  var ENDPOINT = '';
+  // Web3Forms verschickt die Formulardaten per E-Mail. Access-Key unten im payload eintragen.
+  var ENDPOINT = 'https://api.web3forms.com/submit';
 
   function selected() {
     var v = 'orientierungstermin';
@@ -2137,17 +2137,20 @@ footer {
     var consent = document.getElementById('f-consent').checked;
     if (!name || !email || !consent) { errorBox.classList.add('show'); return; }
     var payload = {
+      access_key: 'a8a6d5af-d55c-46b1-ada8-1e272c91328f',
+      subject: 'Neue Anfrage über enerbill.de',
+      from_name: 'enerbill Website',
       name: name, email: email,
       telefon: document.getElementById('f-phone').value.trim(),
       netzgroesse: document.getElementById('f-size').value,
       aktuelle_loesung: document.getElementById('f-current').value,
       nachricht: document.getElementById('f-msg').value.trim(),
       anliegen: selected(),
-      quelle: 'webflow.enerbill.de'
+      quelle: 'enerbill.de'
     };
     var done = function () { showSuccess(selected()); };
     if (ENDPOINT) {
-      fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) })
         .then(done).catch(done);
     } else { done(); }
   });
